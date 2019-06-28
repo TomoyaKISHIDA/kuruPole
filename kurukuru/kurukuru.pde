@@ -43,17 +43,75 @@ class Stage{
 }
 
 class Player{
-  int x = 50;
-  int y = 50;
-  float flag;
+  PImage pole; 
+  PImage arrow;
+  float stepx = 1;
+  float stepy = 1;
+  int s = 20;
+  float r = 0;
+  
+  int x = 100;
+  int y = 100;
+  
+  float rollP = 0;
+  float rollA = 0;
+  
   void spinPole(){
-    ellipse(x, y, 15*3, 15*3);
+    pole = loadImage("kurupole.png");
+    
+    pushMatrix();
+    translate(x + pole.width / 2, y + pole.height / 2);
+    rotate(rollP);
+    imageMode(CENTER);
+    image(pole, 0, 0, s * 5, s);
+    imageMode(CORNER);
+    popMatrix();
+    rollP += 0.03;
   }
   
   void spinArrow(){
+    arrow = loadImage("kuruarrow.png");
+    
+    pushMatrix();
+    translate(x + pole.width / 2, y + pole.height / 2);
+    rotate(rollA);
+    imageMode(CENTER);
+    image(arrow, 0, 0, s, s);
+    imageMode(CORNER);
+    popMatrix();
+    
+    rollA += 0.03;
+    r += 2;
+    if(r == 360){
+      r = 0;
+      rollA = 0;
+    }
   }
   
   void progress(){
+    arrow = loadImage("kuruarrow.png");
+    pushMatrix();
+    translate(x + pole.width / 2, y + pole.height / 2);
+    rotate(rollA);
+    imageMode(CENTER);
+    image(arrow, 0, 0, s, s);
+    imageMode(CORNER);
+    popMatrix();
+    println(r);
+    
+    if(r > 0 && r <= 90){
+      x ++;
+      y --;
+    } else if(r > 90 && r <= 180){
+      x ++;
+      y ++;
+    } else if(r > 180 && r <= 270){
+      x --;
+      y ++;
+    } else {
+      x --;
+      y --;
+    }
   }
 }
 
@@ -86,6 +144,7 @@ Stage g;
 
 //pole
 Player p;
+int flag = 0;
 
 //
 Effect e;
@@ -369,6 +428,14 @@ void setup(){
   y0 = p.y;
 }
 
+void mousePressed() {
+  if(flag == 0){
+    flag ++;
+  } else {
+    flag --;
+  }
+}
+
 void keyPressed(){
   if(key == CODED){
     if(keyCode == RIGHT){
@@ -389,6 +456,7 @@ void keyPressed(){
 
 void draw(){
   background(0);
+  p.spinPole();
   
   basePos.x = (basePos.x * 0.98f + (-p.x + width/2)*0.02f);
   basePos.y = (basePos.y * 0.98f + (-p.y + height/2)*0.02f);
@@ -476,7 +544,13 @@ void draw(){
   fill(100, 100, 200);
   g.wall();
   
-  fill(200, 100, 100);
-  p.spinPole();
+  //fill(200, 100, 100);
+  //p.spinPole();
+  
+  if(flag == 0){
+    p.spinArrow();
+  } else {
+    p.progress();
+  }
   
 }
