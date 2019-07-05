@@ -72,7 +72,7 @@ abstract class Effect {
 
   Effect doEffect() {
     t = (millis() - t_effect) / 1000.0;
-    text(nf(t, 1, 3)  + "sec.", basePos.x, basePos.y);
+    text(nf(t, 1, 3)  + "sec.", p.x, p.y);
     drawEffect();
     return decideEffect();
   }
@@ -98,7 +98,100 @@ class TitleEffect extends Effect {
 
 class GameEffect extends Effect {
   void drawEffect() {
-    text("Game (for 5 seconds)))))))))))))))))))))))))))))))))))))))))))", width * 0.5, height * 0.5);
+    if (EffectFlag >= 1) { 
+    basePos.x = (basePos.x * 0.98f + (-p.x + width/2)*0.02f);
+    basePos.y = (basePos.y * 0.98f + (-p.y + height/2)*0.02f);
+    translate(basePos.x, basePos.y);
+
+    //stage-generate
+    noStroke();
+    fill(255);
+    s1.wall();
+    s2.wall();
+    s3.wall();
+    s4.wall();
+    s5.wall();
+    s6.wall();
+
+    s1_r.wall();
+    s1_d.wall();
+
+    s2_l.wall();
+    s2_d.wall();
+    s2_r.wall();
+
+    s3_l.wall();
+    s3_d.wall();
+
+    s4_u.wall();
+    s4_r.wall();
+
+    s5_l.wall();
+    s5_u.wall();
+    s5_r.wall();
+
+    s6_l.wall();
+    s6_u.wall();
+
+    b1.wall();
+    b2.wall();
+    b3.wall();
+    b4.wall();
+    b5.wall();
+    b6.wall();
+    b7.wall();
+
+    p.flag = 1.0;
+    if (s1.hit(p.x, p.y) == false) {
+      p.flag = 1.0;
+    }
+    else {
+      println("TRUE");
+      p.x = x0;
+      p.y = y0;
+    }
+
+    if (s1.hit(p.x, p.y) == true) {
+      if (p.flag == 1.5 && s1_r.hit(p.x, p.y) == false) {
+        p.flag = 1.5;
+      }
+      else {
+        println("TRUE");
+        p.x = x0;
+        p.y = y0;
+      }
+    }
+
+    /*
+  if(s1.hit(p.x, p.y) == false){
+     if((s2.hit(p.x, p.y) == true) && (s3.hit(p.x, p.y) == true) &&
+     (s4.hit(p.x, p.y) == true) && (s5.hit(p.x, p.y) == true) &&
+     (s5.hit(p.x, p.y) == true)){
+     //do nothing
+     }
+     }else{
+     println("true 1");
+     p.x = x0;
+     p.y = y0;
+     }
+     */
+
+    if (g.goal(p.x, p.y) == true) {
+      println("CLEAR");
+      EffectFlag += 1;
+      setup();
+    }
+    else {
+      //cheak
+      //println(dist(p.x, p.y, g.x, g.y));
+    }
+
+    fill(100, 100, 200);
+    g.wall();
+
+    fill(200, 100, 100);
+    p.spinPole();
+  }
   }
 
   Effect decideEffect() {
@@ -474,98 +567,5 @@ void draw() {
   println();
   */
   e = e.doEffect();
-  if (EffectFlag >= 1) { 
-    basePos.x = (basePos.x * 0.98f + (-p.x + width/2)*0.02f);
-    basePos.y = (basePos.y * 0.98f + (-p.y + height/2)*0.02f);
-    translate(basePos.x, basePos.y);
-
-    //stage-generate
-    noStroke();
-    fill(255);
-    s1.wall();
-    s2.wall();
-    s3.wall();
-    s4.wall();
-    s5.wall();
-    s6.wall();
-
-    s1_r.wall();
-    s1_d.wall();
-
-    s2_l.wall();
-    s2_d.wall();
-    s2_r.wall();
-
-    s3_l.wall();
-    s3_d.wall();
-
-    s4_u.wall();
-    s4_r.wall();
-
-    s5_l.wall();
-    s5_u.wall();
-    s5_r.wall();
-
-    s6_l.wall();
-    s6_u.wall();
-
-    b1.wall();
-    b2.wall();
-    b3.wall();
-    b4.wall();
-    b5.wall();
-    b6.wall();
-    b7.wall();
-
-    p.flag = 1.0;
-    if (s1.hit(p.x, p.y) == false) {
-      p.flag = 1.0;
-    }
-    else {
-      println("TRUE");
-      p.x = x0;
-      p.y = y0;
-    }
-
-    if (s1.hit(p.x, p.y) == true) {
-      if (p.flag == 1.5 && s1_r.hit(p.x, p.y) == false) {
-        p.flag = 1.5;
-      }
-      else {
-        println("TRUE");
-        p.x = x0;
-        p.y = y0;
-      }
-    }
-
-    /*
-  if(s1.hit(p.x, p.y) == false){
-     if((s2.hit(p.x, p.y) == true) && (s3.hit(p.x, p.y) == true) &&
-     (s4.hit(p.x, p.y) == true) && (s5.hit(p.x, p.y) == true) &&
-     (s5.hit(p.x, p.y) == true)){
-     //do nothing
-     }
-     }else{
-     println("true 1");
-     p.x = x0;
-     p.y = y0;
-     }
-     */
-
-    if (g.goal(p.x, p.y) == true) {
-      println("CLEAR");
-      EffectFlag += 1;
-      setup();
-    }
-    else {
-      //cheak
-      //println(dist(p.x, p.y, g.x, g.y));
-    }
-
-    fill(100, 100, 200);
-    g.wall();
-
-    fill(200, 100, 100);
-    p.spinPole();
-  }
+  
 }
