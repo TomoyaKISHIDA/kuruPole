@@ -48,7 +48,7 @@ class Player{
   PImage arrow = loadImage("kuruarrow.png");
   float stepx = 3;
   float stepy = 3;
-  int s = 20; //size
+  float s = 17.5; //size
   float r = 0;
   
   int px = 100;
@@ -133,16 +133,70 @@ class Player{
   
 }
 
-class Effect{
-  void startScreen(){
+
+abstract class Effect {
+  long t_effect;
+  float t;
+
+  Effect() {
+    t_effect = millis();
   }
-  
-  void playScreen(){
+
+  Effect doEffect() {
+    t = (millis() - t_effect) / 1000.0;
+    text(nf(t, 1, 3)  + "sec.", 20, 20);
+    drawEffect();
+    return decideEffect();
   }
-  
-  void resultScreen(){
+
+  abstract void drawEffect();
+  abstract Effect decideEffect();
+}
+
+class TitleEffect extends Effect {
+  void drawEffect() {
+    text("Game Title", width * 0.5, height * 0.3);
+    text("Press 'z' key to start", width * 0.5, height * 0.7);
+  }
+
+  Effect decideEffect() {
+    if (keyPressed && key == 'z') { // if 'z' key is pressed
+      return new GameEffect(); // start game
+    }
+    return this;
   }
 }
+
+class GameEffect extends Effect {
+  void drawEffect() {
+    text("Game (for 5 seconds)", width * 0.5, height * 0.5);
+  }
+  
+  Effect decideEffect() {
+    if (t>5 == true) { // if ellapsed time is larger than
+      return new EndingEffect(); // go to ending
+    } 
+    return this;
+  }
+}
+
+class EndingEffect extends Effect {
+  void drawEffect() {
+    text("GAME CLEAR", width * 0.5, height * 0.5);
+    if (t > 3) {
+      text("Press 'a' to restart game.", width * 0.5, height * 0.7);
+    }
+  }
+
+  Effect decideEffect() {
+    if (t > 3 && keyPressed && key == 'a') {
+      return new TitleEffect();
+    }
+    return this;
+  }
+}
+//state
+Effect effect;
 //room
 Stage s1, s2, s3, s4, s5, s6;
 
@@ -176,6 +230,10 @@ int x0, y0;
 void setup(){
   size(900, 600);
   //size(600, 600);
+  
+  textSize(32); 
+  fill(128);
+  e =new TitleEffect();
   
   s1 = new Stage();
   s2 = new Stage();
@@ -215,7 +273,6 @@ void setup(){
   g = new Stage();
   
   p = new Player();
-  e = new Effect();
   
   noStroke();
   fill(200, 100, 100);
@@ -880,6 +937,8 @@ void draw(){
   basePos.y = (basePos.y * 0.98f + (-p.y + height/2)*0.02f);
   translate(basePos.x, basePos.y);
   
+  e = e.doEffect();
+
   //stage-generate
   noStroke();
   fill(255);
@@ -941,8 +1000,8 @@ void draw(){
   g.wall();
   
   for(int i = 0; i < o.length; i ++){
-    fill(100);
-    //noFill();
+    //fill(100);
+    noFill();
     //check
     if(o[i].w < 0 || o[i].h < 0){
       fill(200, 100, 100);
