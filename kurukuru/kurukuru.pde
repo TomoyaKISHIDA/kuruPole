@@ -33,7 +33,7 @@ class Stage{
   
   //障害物の動き(プレイヤーに寄る)
   void obstacle(int px, int py){
-    seek = 0.005;
+    seek = 0.0070;
     dx = px-25 -ox;
     dy = py-25 -oy;
     if(1 < abs(ox)){
@@ -46,7 +46,7 @@ class Stage{
   
   //障害物の動き(ステージ端による)
   void backObstacle(int sx, int sy){
-    seek = 0.001;
+    seek = 0.0015;
     dx = sx-25 -ox;
     dy = sy-25 -oy;
     if(1 < abs(ox)){
@@ -260,7 +260,7 @@ class Effect{
 
   void clearEnd(){
     background(255);
-    image(meme, 0, 0, width, height);
+    image(meme, 0, 0, width+50, height);
 
     if(keyPressed && key == 'r'){
       setup();
@@ -978,8 +978,11 @@ void setup(){
   /*-----------------------------------------------
    スタート生成(ランダム)
    -----------------------------------------------*/
-
+   
   p.start = int(random(1, 7));
+  while(p.start == g.flag){
+    p.start = int(random(1, 7));
+  }
   println("p:" + p.start);
   randomStart();
   obstacleStart();
