@@ -1196,15 +1196,12 @@ void draw(){
     textFont(font); // 選択したフォントを指定する
     fill(random(256));
     textSize(random(12*4, 36*4));
-    text("イ", random(width*4), random(height*4));
-    text("ニ", random(width*4), random(height*4));
+    text("長", random(width*4), random(height*4));
     text("エ", random(width*4), random(height*4));
     text("ス", random(width*4), random(height*4));
     text("タ", random(width*4), random(height*4));
-    text("長", random(width*4), random(height*4));
-    text("友", random(width*4), random(height*4));
-    text("本", random(width*4), random(height*4));
-    text("田", random(width*4), random(height*4));
+    text("圭", random(width*4), random(height*4));
+    text("佑", random(width*4), random(height*4));
     /*-----------------------------------------------
     プレイヤー出力
     -----------------------------------------------*/
